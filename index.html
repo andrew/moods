@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
+	"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+	<title>untitled</title>
+	<link rel="stylesheet" href="sp://import/css/adam.css">
+	<style type="text/css" media="screen">
+	  .colour{
+	    display:block;
+	    width:25%;
+	    height:150px;
+	    float:left;
+	    opacity:0.5;
+	    cursor:pointer;
+	  }
+	  .colour:hover{
+	    opacity:0.8;
+	  }
+	  #black{
+	    background-color:#000000;
+	    }
+    #brown{background-color:rgb(153,51,0)}
+    #red{background-color:#c00}
+    #orange{background-color:#f60}
+    #yellow{background-color:yellow}
+    #green_yellow{background-color:#3C0}
+    #green{background-color:#090}
+    #blue_green{background-color:#0CC}
+    #blue{background-color:#33F}
+    #indigo{background-color:#60C}
+    #violet{background-color:#939}
+    #mauve{background-color:#C3C}
+    #pink{background-color:#F9F}
+    #glassstone{background-color:#CFF}
+    #white{background-color:#FFF}
+    #gray{background-color:#999}
+	</style>
+  <script type="text/javascript" src='jquery.js'></script>
+	<script type="text/javascript" charset="utf-8">
+	 var colours = {"black":["intense","dramatic","dark","ominous","angst-ridden"],"brown":["rebellious"],"red":["passionate","aggressive","angry"],"orange":["energetic","warm","bouncy"],"yellow":["mellow"],"green_yellow":["eerie"],"green":["spiritual","gleeful"],"blue_green":["cold"],"blue":["happy","fun","calming","lively","peaceful","elegant"],"indigo":["groovy"],"violet":["funky","happy","mystical"],"mauve":["romantic","smooth"],"pink":["cool"],"glassstone":["dreamy","light","futuristic"],"white":["poignant","quiet","reflective","relax","meditation"],"gray":["cool","sad","melancholia","gloomy"]}
+   
+   $(function(){
+     var sp = getSpotifyApi(1);
+     
+     function playTrack(uri) {
+          sp.trackPlayer.playTrackFromUri(uri, {
+             onSuccess: function() { console.log("success");} ,
+             onFailure: function () { console.log("failure");},
+             onComplete: function () { console.log("complete"); }
+         });
+     }
+     
+     $('a.colour').on('click',function(){
+       var colour = $(this).attr('id')
+       var moods = colours[colour]
+       var random_mood = moods[Math.floor(Math.random()*moods.length)]
+   $.getJSON('http://developer.echonest.com/api/v4/song/search?api_key=N6E4NIOVYMTHNDM8J&format=jsonp&mood='+random_mood+'&results=50&sort=song_hotttnesss-desc&callback=?', function(data){
+         var songs = data.response.songs
+         var random_song = songs[Math.floor(Math.random()*songs.length)]
+         // console.log(random_song.title, random_song.artist_name)
+         
+         sp.core.search(random_song.title,
+             {onSuccess: function(result) {
+                 track = result.tracks[0]
+                 console.log(track)
+                 playTrack(track.uri)
+                 }
+             }
+         );
+       });
+  	 });
+   })
+	</script>
+
+</head>
+
+<body>
+  <div id='wrap'>
+    <a class='colour' id='black'></a>
+    <a class='colour' id='brown'></a>
+    <a class='colour' id='red'></a>
+    <a class='colour' id='orange'></a>
+    <a class='colour' id='yellow'></a>
+    <a class='colour' id='green_yellow'></a>
+    <a class='colour' id='green'></a>
+    <a class='colour' id='blue_green'></a>
+    <a class='colour' id='blue'></a>
+    <a class='colour' id='indigo'></a>
+    <a class='colour' id='violet'></a>
+    <a class='colour' id='mauve'></a>
+    <a class='colour' id='pink'></a>
+    <a class='colour' id='glassstone'></a>
+    <a class='colour' id='white'></a>
+    <a class='colour' id='gray'></a>
+  </div>
+</body>
+</html>
